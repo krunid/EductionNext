@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>การศึกษาต่อ - iPhone 16 Style</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'San Francisco', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .iphone-outer-frame {
+            width: 400px;
+            height: 854px;
+            background-color: #e0e0e0;
+            border-radius: 65px;
+            padding: 0.5rem;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .iphone-frame {
+            width: 100%;
+            height: 100%;
+            background-color: #c0c0c0;
+            border-radius: 60px;
+            padding: 0.5rem;
+            box-sizing: border-box;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            border-radius: 55px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .status-bar {
+            background-color: #a8e4a0;
+            height: 44px;
+            padding: 0 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #1c2526;
+            font-size: 14px;
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            border-top-left-radius: 55px;
+            border-top-right-radius: 55px;
+        }
+
+        .status-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .status-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dynamic-island {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 40px;
+            background-color: #000;
+            border-radius: 20px;
+            z-index: 2;
+        }
+
+        .time {
+            font-weight: 600;
+        }
+
+        .signal, .wifi, .battery {
+            width: 20px;
+            height: 12px;
+            display: inline-block;
+        }
+
+        .signal::before {
+            content: "||||";
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .wifi::before {
+            content: "📶";
+            font-size: 14px;
+        }
+
+        .battery::before {
+            content: "🔋";
+            font-size: 14px;
+        }
+
+        .container {
+            padding: 20px;
+            padding-top: 40px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1c2526;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #1c2526;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d2d2d7;
+            border-radius: 12px;
+            background-color: #f5f5f7;
+            box-sizing: border-box;
+            font-size: 16px;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        #otherPrefix, #instituteInput {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+        }
+
+        .radio-group input[type="radio"] {
+            width: auto;
+            margin-right: 5px;
+        }
+
+        .radio-group label {
+            display: none;
+        }
+
+        .radio-group label.visible {
+            display: inline-flex;
+        }
+
+        button {
+            width: calc(100% - 20px);
+            margin: 0 10px;
+            padding: 15px;
+            background-color: #007aff;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 25px;
+        }
+
+        button:hover {
+            background-color: #0066cc;
+        }
+
+        #showDataBtn {
+            background-color: #34c759;
+        }
+
+        #showDataBtn:hover {
+            background-color: #28a745;
+        }
+
+        #certificateModal, #dataModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .modal-content {
+            background-color: #f5f5f7;
+            padding: 20px;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 340px;
+            max-height: 70vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .modal-content h2 {
+            font-size: 20px;
+            margin-top: 0;
+            color: #1c2526;
+            text-align: center;
+        }
+
+        .modal-content p {
+            margin: 10px 0;
+            font-size: 16px;
+            color: #1c2526;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ff3b30;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            background-color: #cc2e26;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .data-table th, .data-table td {
+            border: 1px solid #d2d2d7;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .data-table th {
+            background-color: #e0e0e0;
+            color: #1c2526;
+        }
+
+        @supports (padding-top: env(safe-area-inset-top)) {
+            .status-bar {
+                padding-top: env(safe-area-inset-top);
+            }
+        }
+
+        @media (max-width: 400px) {
+            .iphone-outer-frame {
+                width: 100%;
+                height: 100vh;
+                border-radius: 0;
+            }
+            .iphone-frame {
+                border-radius: 0;
+            }
+            .screen {
+                border-radius: 0;
+            }
+            .status-bar {
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-outer-frame">
+        <div class="iphone-frame">
+            <div class="screen">
+                <div class="status-bar">
+                    <div class="status-left">
+                        <span class="time" id="currentTime"></span>
+                    </div>
+                    <div class="status-right">
+                        <span class="signal"></span>
+                        <span class="wifi"></span>
+                        <span class="battery"></span>
+                    </div>
+                </div>
+                <div class="dynamic-island"></div>
+                <div class="container">
+                    <h1>การศึกษาต่อ</h1>
+                    <form id="registrationForm">
+                        <div class="form-group">
+                            <label for="prefix">คำนำหน้า:</label>
+                            <select id="prefix" name="prefix" required>
+                                <option value="">เลือกคำนำหน้า</option>
+                                <option value="นาย">นาย</option>
+                                <option value="นาง">นาง</option>
+                                <option value="นางสาว">นางสาว</option>
+                                <option value="อื่นๆ">อื่นๆ</option>
+                            </select>
+                            <input type="text" id="otherPrefix" name="otherPrefix" placeholder="ระบุคำนำหน้า">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">ชื่อ-นามสกุล:</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>เพศ:</label>
+                            <div class="radio-group" id="genderGroup">
+                                <label id="maleLabel"><input type="radio" name="gender" value="ชาย" required> ชาย</label>
+                                <label id="femaleLabel"><input type="radio" name="gender" value="หญิง"> หญิง</label>
+                                <label id="otherGenderLabel"><input type="radio" name="gender" value="อื่นๆ"> อื่นๆ</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">อีเมล:</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="grade">ชั้น:</label>
+                            <select id="grade" name="grade" required>
+                                <option value="">เลือกชั้น</option>
+                                <option value="ป.6">ป.6</option>
+                                <option value="ม.3">ม.3</option>
+                                <option value="ม.6">ม.6</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="room">ห้อง:</label>
+                            <select id="room" name="room" required>
+                                <option value="">เลือกห้อง</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="continueStudy">การศึกษาต่อ:</label>
+                            <select id="continueStudy" name="continueStudy" required>
+                                <option value="">เลือกการศึกษาต่อ</option>
+                                <option value="yes">ศึกษาต่อ</option>
+                                <option value="no">ไม่ศึกษาต่อ</option>
+                            </select>
+                            <input type="text" id="instituteInput" name="institute" placeholder="ระบุสถานศึกษา">
+                        </div>
+                        <button type="submit" id="submitBtn">บันทึก</button>
+                        <button type="button" id="showDataBtn" onclick="showData()">แสดงข้อมูล</button>
+                    </form>
+                </div>
+                <div id="certificateModal">
+                    <div class="modal-content">
+                        <button class="close-btn" onclick="closeModal('certificateModal')">×</button>
+                        <h2>ข้อมูลการศึกษาต่อ</h2>
+                        <p>ชื่อ: <span id="certPrefix"></span> <span id="certName"></span></p>
+                        <p>เพศ: <span id="certGender"></span></p>
+                        <p>อีเมล: <span id="certEmail"></span></p>
+                        <p>ชั้น: <span id="certGrade"></span></p>
+                        <p>ห้อง: <span id="certRoom"></span></p>
+                        <p>การศึกษาต่อ: <span id="certContinueStudy"></span></p>
+                        <p id="certInstituteContainer">สถานศึกษา: <span id="certInstitute"></span></p>
+                        <p>วันที่บันทึก: <span id="certDate"></span></p>
+                    </div>
+                </div>
+                <div id="dataModal">
+                    <div class="modal-content">
+                        <button class="close-btn" onclick="closeModal('dataModal')">×</button>
+                        <h2>ข้อมูลการศึกษาต่อทั้งหมด</h2>
+                        <table class="data-table" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>คำนำหน้า</th>
+                                    <th>ชื่อ-นามสกุล</th>
+                                    <th>เพศ</th>
+                                    <th>อีเมล</th>
+                                    <th>ชั้น</th>
+                                    <th>ห้อง</th>
+                                    <th>ศึกษาต่อ</th>
+                                    <th>สถานศึกษา</th>
+                                    <th>วันที่</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dataTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // โหลดข้อมูลจาก localStorage เมื่อเริ่มต้น
+        let registrations = JSON.parse(localStorage.getItem('registrations')) || [];
+
+        function updateTime() {
+            const timeElement = document.getElementById('currentTime');
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            timeElement.textContent = `${hours}:${minutes}`;
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        const prefixSelect = document.getElementById('prefix');
+        const otherPrefixInput = document.getElementById('otherPrefix');
+        const maleLabel = document.getElementById('maleLabel');
+        const femaleLabel = document.getElementById('femaleLabel');
+        const otherGenderLabel = document.getElementById('otherGenderLabel');
+        const genderRadios = document.getElementsByName('gender');
+        const continueStudySelect = document.getElementById('continueStudy');
+        const instituteInput = document.getElementById('instituteInput');
+        const submitBtn = document.getElementById('submitBtn');
+
+        function updateGenderOptions() {
+            const prefix = prefixSelect.value;
+
+            maleLabel.classList.remove('visible');
+            femaleLabel.classList.remove('visible');
+            otherGenderLabel.classList.remove('visible');
+            genderRadios.forEach(radio => radio.checked = false);
+
+            if (prefix === 'นาย') {
+                maleLabel.classList.add('visible');
+                genderRadios[0].checked = true;
+            } else if (prefix === 'นาง' || prefix === 'นางสาว') {
+                femaleLabel.classList.add('visible');
+                genderRadios[1].checked = true;
+            } else if (prefix === 'อื่นๆ') {
+                maleLabel.classList.add('visible');
+                femaleLabel.classList.add('visible');
+                otherGenderLabel.classList.add('visible');
+                otherPrefixInput.style.display = 'block';
+                otherPrefixInput.required = true;
+            } else {
+                maleLabel.classList.add('visible');
+                femaleLabel.classList.add('visible');
+                otherGenderLabel.classList.add('visible');
+                otherPrefixInput.style.display = 'none';
+                otherPrefixInput.required = false;
+                otherPrefixInput.value = '';
+            }
+        }
+
+        function updateContinueStudyOptions() {
+            const continueStudy = continueStudySelect.value;
+
+            if (continueStudy === 'yes') {
+                instituteInput.style.display = 'block';
+                instituteInput.required = true;
+                submitBtn.textContent = 'บันทึก';
+            } else if (continueStudy === 'no') {
+                instituteInput.style.display = 'none';
+                instituteInput.required = false;
+                instituteInput.value = '';
+                submitBtn.textContent = 'บันทึก';
+            } else {
+                instituteInput.style.display = 'none';
+                instituteInput.required = false;
+                instituteInput.value = '';
+                submitBtn.textContent = 'บันทึก';
+            }
+        }
+
+        prefixSelect.addEventListener('change', updateGenderOptions);
+        continueStudySelect.addEventListener('change', updateContinueStudyOptions);
+
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const prefix = prefixSelect.value === 'อื่นๆ' ? 
+                document.getElementById('otherPrefix').value : 
+                prefixSelect.options[prefixSelect.selectedIndex].text;
+            const name = document.getElementById('name').value;
+            const gender = document.querySelector('input[name="gender"]:checked').value;
+            const email = document.getElementById('email').value;
+            const grade = document.getElementById('grade').options[document.getElementById('grade').selectedIndex].text;
+            const room = document.getElementById('room').options[document.getElementById('room').selectedIndex].text;
+            const continueStudy = continueStudySelect.value === 'yes' ? 'ศึกษาต่อ' : 'ไม่ศึกษาต่อ';
+            const institute = continueStudySelect.value === 'yes' ? instituteInput.value : '';
+            const date = new Date().toLocaleDateString('th-TH');
+
+            // เก็บข้อมูลลง array
+            const registration = { prefix, name, gender, email, grade, room, continueStudy, institute, date };
+            registrations.push(registration);
+
+            // บันทึกข้อมูลลง localStorage
+            localStorage.setItem('registrations', JSON.stringify(registrations));
+
+            // แสดงใน modal
+            document.getElementById('certPrefix').textContent = prefix;
+            document.getElementById('certName').textContent = name;
+            document.getElementById('certGender').textContent = gender;
+            document.getElementById('certEmail').textContent = email;
+            document.getElementById('certGrade').textContent = grade;
+            document.getElementById('certRoom').textContent = room;
+            document.getElementById('certContinueStudy').textContent = continueStudy;
+            document.getElementById('certInstituteContainer').style.display = continueStudy === 'ศึกษาต่อ' ? 'block' : 'none';
+            document.getElementById('certInstitute').textContent = institute;
+            document.getElementById('certDate').textContent = date;
+            document.getElementById('certificateModal').style.display = 'flex';
+            
+            this.reset();
+            otherPrefixInput.style.display = 'none';
+            instituteInput.style.display = 'none';
+            updateGenderOptions();
+            updateContinueStudyOptions();
+        });
+
+        function showData() {
+            const tbody = document.getElementById('dataTableBody');
+            tbody.innerHTML = ''; // ล้างข้อมูลเก่า
+
+            if (registrations.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center;">ไม่มีข้อมูล</td></tr>';
+            } else {
+                registrations.forEach(reg => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${reg.prefix}</td>
+                        <td>${reg.name}</td>
+                        <td>${reg.gender}</td>
+                        <td>${reg.email}</td>
+                        <td>${reg.grade}</td>
+                        <td>${reg.room}</td>
+                        <td>${reg.continueStudy}</td>
+                        <td>${reg.institute || '-'}</td>
+                        <td>${reg.date}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+            document.getElementById('dataModal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // เรียกฟังก์ชันเริ่มต้น
+        updateGenderOptions();
+        updateContinueStudyOptions();
+    </script>
+</body>
+</html>
